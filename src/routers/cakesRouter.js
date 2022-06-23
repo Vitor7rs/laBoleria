@@ -5,6 +5,6 @@ import cakeSchema from "../schemas/cakeSchema.js"
 
 const cakesRouter = Router();
 
-cakesRouter.post("/cakes", schemaValidator(cakeSchema),postCakes);
+cakesRouter.post("/cakes", schemaValidator(cakeSchema), postCakes);
 
 export default cakesRouter;

@@ -1,7 +1,4 @@
 import repository from "../repositories/repository.js";
-
-
-
 // faltou o link retornar o status certo
 export async function postCakes(req, res){
     const cake = req.body;
@@ -15,6 +12,6 @@ export async function postCakes(req, res){
 
     }catch(error){
         console.log(error);
-        return res.status(500).send("ERRO!")
+        return res.status(500).send("NTERNAL SERVER ERROR");
     }
 }   
