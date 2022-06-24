@@ -63,6 +63,20 @@ async function getOrders(date){
     );
 }
 
+async function getOrderById(orderId){
+    return db.query(
+        `
+        SELECT o.id AS "orderId", o."clientId", cl.name as "clientName", cl.address AS "clientAddress", cl.phone AS "clientPhone",
+        o."cakeId", ca.name AS "cakeName", ca.price AS "cakePrice", ca.description AS "cakeDescription", ca.image AS "cakeImage",
+        o.quantity, o."createdAt", o."totalPrice"
+        FROM orders o
+        JOIN clients cl ON o."clientId" = cl.id
+        JOIN cakes ca ON o."cakeId" = ca.id
+        WHERE o.id = $1
+        `, [orderId]
+    )
+}
+
 // =========================================================================
 
 const repository = {
@@ -72,7 +86,8 @@ const repository = {
     createClient,
     getClientById,
     createOrder,
-    getOrders
+    getOrders,
+    getOrderById
 }
 
 export default repository;

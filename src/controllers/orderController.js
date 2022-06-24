@@ -63,3 +63,44 @@ export async function getOrders(req, res){
         return res.status(500).send("INTERNAL SERVER ERROR")
     }
 }
+
+//==========================================================================
+
+export async function getOrder(req, res){
+    const orderId = req.params.id;
+    try{
+        const orderData = await repository.getOrderById(orderId)
+        if (orderData.rowCount <= 0) {
+            return res.status(404).send("Order id not found")
+        }
+
+        const order = orderData.rows.map(
+            order => (
+                {
+                    id: order.orderId,
+                    clients: {
+                        id: order.clientId,
+                        name: order.clientName,
+                        address: order.clientAddress,
+                        phone: order.clientPhone
+                    },
+                    cake: {
+                        id: order.cakeId,
+                        name: order.cakeName,
+                        price: order.cakePrice,
+                        description: order.cakeDescription,
+                        image: order.cakeImage
+                    },
+                    createdAt: order.createdAt,
+                    quantity: order.quantity,
+                    totalPrice: order.totalPrice
+                }
+            )
+        )
+        return res.status(200).send(order)
+
+    }catch(error){
+        console.log(error)
+        return res.status(500).send("INTERNAL SERVER ERROR")
+    }
+}
