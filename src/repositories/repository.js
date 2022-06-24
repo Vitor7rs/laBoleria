@@ -55,7 +55,7 @@ async function getOrders(date){
     return db.query(`
         SELECT o.id AS "orderId", o."clientId", cl.name as "clientName", cl.address AS "clientAddress", cl.phone AS "clientPhone",
         o."cakeId", ca.name AS "cakeName", ca.price AS "cakePrice", ca.description AS "cakeDescription", ca.image AS "cakeImage",
-        o.quantity, o."createdAt", o."totalPrice"
+        o.quantity, o.quantity, TO_CHAR(o."createdAt", 'YYYY-MM-DD HH24:MI') AS "createdAt", o."totalPrice"
         FROM orders o
         JOIN clients cl ON o."clientId" = cl.id
         JOIN cakes ca ON o."cakeId" = ca.id
@@ -68,12 +68,23 @@ async function getOrderById(orderId){
         `
         SELECT o.id AS "orderId", o."clientId", cl.name as "clientName", cl.address AS "clientAddress", cl.phone AS "clientPhone",
         o."cakeId", ca.name AS "cakeName", ca.price AS "cakePrice", ca.description AS "cakeDescription", ca.image AS "cakeImage",
-        o.quantity, o."createdAt", o."totalPrice"
+        o.quantity, TO_CHAR(o."createdAt", 'YYYY-MM-DD HH24:MI') AS "createdAt", o."totalPrice"
         FROM orders o
         JOIN clients cl ON o."clientId" = cl.id
         JOIN cakes ca ON o."cakeId" = ca.id
         WHERE o.id = $1
         `, [orderId]
+    )
+}
+
+async function getOrdersByClientId(clientId) {
+    return db.query(
+        `
+       SELECT o.id AS "orderId", o.quantity, TO_CHAR(o."createdAt", 'YYYY-MM-DD HH24:MI') AS "createdAt", o."totalPrice", ca.name AS "cakeName"
+        FROM orders o
+        JOIN cakes ca ON o."cakeId" = ca.id
+        WHERE o."clientId" = $1
+        `, [clientId]
     )
 }
 
@@ -87,7 +98,8 @@ const repository = {
     getClientById,
     createOrder,
     getOrders,
-    getOrderById
+    getOrderById,
+    getOrdersByClientId
 }
 
 export default repository;
