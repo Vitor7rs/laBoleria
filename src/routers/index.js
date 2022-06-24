@@ -9,6 +9,6 @@ const router = Router();
 
 router.use(cakesRouter);
 router.use(clientsRouter);
-router.use(ordersRouter)
+router.use(ordersRouter);
 
 export default router;
